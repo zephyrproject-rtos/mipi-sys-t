@@ -8,7 +8,7 @@ set(SYST_CFG_CONFORMANCE_LEVEL "30" CACHE STRING "Supported MIPI SyS-T API confo
 
 configure_file(library/include/mipi_syst.h.in library/include/mipi_syst.h)
 
-target_include_directories(
+zephyr_include_directories(
 	mipi_syst_library INTERFACE
 	${CMAKE_CURRENT_BINARY_DIR}/library/include/
 	library/include/
