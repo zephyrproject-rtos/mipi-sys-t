@@ -12,18 +12,17 @@ zephyr_include_directories(
 	mipi_syst_library INTERFACE
 	${CMAKE_CURRENT_BINARY_DIR}/library/include/
 	library/include/
-	library/platform/example/include/
 	)
 
 zephyr_library()
 
+zephyr_library_sources(zephyr_init.c)
 zephyr_library_sources(library/src/mipi_syst_api.c)
 zephyr_library_sources(library/src/mipi_syst_compiler.c)
 zephyr_library_sources(library/src/mipi_syst_crc32.c)
 zephyr_library_sources(library/src/mipi_syst_init.c)
 zephyr_library_sources(library/src/mipi_syst_inline.c)
 zephyr_library_sources(library/src/mipi_syst_writer.c)
-zephyr_library_sources(library/platform/example/src/mipi_syst_platform.c)
 
 zephyr_library_link_libraries(mipi_syst_library)
 
