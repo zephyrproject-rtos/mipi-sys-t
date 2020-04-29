@@ -124,7 +124,7 @@ static void platform_handle_release(struct mipi_syst_handle *systh)
 #if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)
 mipi_syst_u64 mipi_syst_get_epoch(void)
 {
-	return k_uptime_get();
+	return k_uptime_ticks();
 }
 #endif
 
@@ -166,6 +166,9 @@ void update_systh_platform_data(struct mipi_syst_handle *handle,
 {
 #if defined(MIPI_SYST_PCFG_LENGTH_FIELD)
 	MIPI_SYST_ENABLE_HANDLE_LENGTH(handle, 1);
+#endif
+#if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)
+	MIPI_SYST_ENABLE_HANDLE_TIMESTAMP(handle, 1);
 #endif
 #if defined(MIPI_SYST_PCFG_ENABLE_PLATFORM_STATE_DATA)
 	handle->systh_platform.flag = (mipi_syst_u32)flag;

@@ -81,6 +81,7 @@ struct mipi_syst_platform_handle {
 
 #if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)
 #define MIPI_SYST_PLATFORM_CLOCK() mipi_syst_get_epoch()
+#define MIPI_SYST_PLATFORM_FREQ()  CONFIG_SYS_CLOCK_TICKS_PER_SEC
 
 mipi_syst_u64 mipi_syst_get_epoch(void);
 #endif
