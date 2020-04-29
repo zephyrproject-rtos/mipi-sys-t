@@ -577,7 +577,6 @@ typedef void (*mipi_syst_msg_write_t)(
  */
 #define MIPI_SYST_PCFG_ENABLE_TIMESTAMP
 
-#if defined(_DOXYGEN_)  /*  only for doxygen, remove the #if to enable */
  /**
  * Enable generation of length field
  *
@@ -585,7 +584,6 @@ typedef void (*mipi_syst_msg_write_t)(
  * field that indicates how many payload bytes follow.
  */
 #define MIPI_SYST_PCFG_LENGTH_FIELD
-#endif
 
 #endif
 

@@ -164,6 +164,9 @@ static void mipi_syst_platform_init(struct mipi_syst_header *systh,
 void update_systh_platform_data(struct mipi_syst_handle *handle,
 		const struct log_output *log_output, u32_t flag)
 {
+#if defined(MIPI_SYST_PCFG_LENGTH_FIELD)
+	MIPI_SYST_ENABLE_HANDLE_LENGTH(handle, 1);
+#endif
 #if defined(MIPI_SYST_PCFG_ENABLE_PLATFORM_STATE_DATA)
 	handle->systh_platform.flag = (mipi_syst_u32)flag;
 	handle->systh_platform.log_output = (struct log_output *)log_output;
