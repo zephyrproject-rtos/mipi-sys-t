@@ -23,7 +23,6 @@ zephyr_include_directories(
 
 zephyr_library()
 
-zephyr_library_sources(zephyr_init.c)
 zephyr_library_sources(library/src/mipi_syst_api.c)
 zephyr_library_sources(library/src/mipi_syst_compiler.c)
 zephyr_library_sources(library/src/mipi_syst_crc32.c)
