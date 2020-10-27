@@ -18,7 +18,6 @@ zephyr_include_directories(
 	mipi_syst_library INTERFACE
 	${CMAKE_CURRENT_BINARY_DIR}/library/include/
 	library/include/
-	include/
 	)
 
 zephyr_library()
