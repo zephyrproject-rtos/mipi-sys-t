@@ -1427,6 +1427,28 @@ mipi_syst_write_debug_string(struct mipi_syst_handle* svh,
 			(str),\
 			##__VA_ARGS__)
 
+/**
+ * Send UTF-8 character string in C99 printf format together with
+ * the arguments to support printf() style output formatting.
+ *
+ * @param h mipi_syst_handle* SyS-T handle
+ * @param severity mipi_syst_severity severity level (0..7)
+ * @param str const mipi_syst_u8 * pointer to UTF-8 string bytes
+ * @param args variable argument list of format arguments
+ *
+ * Example:
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.c}
+ *
+ * MIPI_SYST_VPRINTF(systh, MIPI_SYST_SEVERITY_INFO,
+ *             "The %s jumps over the %s %d times", "cow", "moon", 10);
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+#define MIPI_SYST_VPRINTF(h, severity, str, args) \
+		mipi_syst_write_vprintf_string((h), MIPI_SYST_NOLOCATION, \
+			(severity),\
+			(str),\
+			(args))
+
 #if defined(MIPI_SYST_PCFG_ENABLE_LOCATION_RECORD)
 
  /**
@@ -1510,11 +1532,19 @@ mipi_syst_write_debug_string(struct mipi_syst_handle* svh,
 #endif /* defined(MIPI_SYST_PCFG_ENABLE_LOCATION_RECORD) */
 
 MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+mipi_syst_write_vprintf_string(struct mipi_syst_handle* svh,
+		struct mipi_syst_msglocation* loc,
+		enum mipi_syst_severity severity,
+		const char *fmt,
+		va_list args);
+
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
 mipi_syst_write_printf_string(struct mipi_syst_handle* svh,
 		struct mipi_syst_msglocation* loc,
 		enum mipi_syst_severity severity,
 		const char *fmt,
 		...);
+
 #endif /* MIPI_SYST_PCFG_ENABLE_PRINTF_API */
 
 /** @} */

@@ -1091,18 +1091,17 @@ static int buildCatalogPayload(
  * @param loc Pointer to instrumentation location or null if no location
  * @param severity severity level (0..7)
  * @param fmt pointer to UTF-8 string bytes
- * @param ... optional format arguments
+ * @param args variable argument list of format arguments
  */
 MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
-	mipi_syst_write_printf_string(struct mipi_syst_handle* svh,
+	mipi_syst_write_vprintf_string(struct mipi_syst_handle* svh,
 	struct mipi_syst_msglocation* loc,
 	enum mipi_syst_severity severity,
 	const char *fmt,
-	...)
+	va_list args)
 {
 	char argBuf[MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE];
 	int len;
-	va_list args;
 	struct mipi_syst_msgdsc desc;
 	struct mipi_syst_scatter_prog prog[MIPI_SYST_SCATTER_PROG_LEN];
 	struct mipi_syst_scatter_prog *prog_ptr = prog;
@@ -1121,9 +1120,7 @@ MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
 #endif
 	desc.ed_tag.et_severity = severity;
 
-	va_start(args, fmt);
 	len = buildPrintfPayload(argBuf, sizeof(argBuf), fmt, args);
-	va_end(args);
 
 	if (len <= 0 ) {
 		/* Invalid format, send up to 32 bytes from the offending format string
@@ -1155,6 +1152,29 @@ MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
 
 	/* call IO routine to dump out the message */
 	MIPI_SYST_SCATTER_WRITE(svh, prog, &desc);
+}
+
+/**
+ * Write a printf message
+ *
+ * @param svh SyS-T handle
+ * @param loc Pointer to instrumentation location or null if no location
+ * @param severity severity level (0..7)
+ * @param fmt pointer to UTF-8 string bytes
+ * @param ... optional format arguments
+ */
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+	mipi_syst_write_printf_string(struct mipi_syst_handle* svh,
+	struct mipi_syst_msglocation* loc,
+	enum mipi_syst_severity severity,
+	const char *fmt,
+	...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	mipi_syst_write_vprintf_string(svh, loc, severity, fmt, args);
+	va_end(args);
 }
 
 #if defined(MIPI_SYST_PCFG_ENABLE_CATID64_API)
