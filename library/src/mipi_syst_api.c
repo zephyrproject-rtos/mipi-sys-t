@@ -1253,6 +1253,65 @@ MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
 	/* call IO routine to dump out the message */
 	MIPI_SYST_SCATTER_WRITE(svh, prog, &desc);
 }
+
+/**
+ * Write a printf catalog message with 64bit ID using a prepared arg list
+ *
+ * @param svh SyS-T handle
+ * @param loc Pointer to instrumentation location or null if no location
+ * @param severity severity level (0..7)
+ * @param args pointer to prepared argument list
+ * @param args_sz size of @p args (in bytes)
+ */
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+	mipi_syst_write_catalog64_args_copy(struct mipi_syst_handle* svh,
+	struct mipi_syst_msglocation* loc,
+	enum mipi_syst_severity severity,
+	mipi_syst_u64 id,
+	mipi_syst_u8 *args,
+	size_t args_sz)
+{
+	mipi_syst_u8 argBuf[MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE+sizeof(id)];
+	int len;
+	struct mipi_syst_msgdsc desc;
+	struct mipi_syst_scatter_prog prog[MIPI_SYST_SCATTER_PROG_LEN];
+	struct mipi_syst_scatter_prog *prog_ptr = prog;
+
+	if ((struct mipi_syst_handle*)0 == svh)
+		return;
+
+	if (args_sz >= MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE)
+		return;
+
+	/* assign tag */
+	desc.ed_tag = svh->systh_tag;
+	desc.ed_tag.et_type = MIPI_SYST_TYPE_CATALOG;
+#if defined(MIPI_SYST_PCFG_ENABLE_64BIT_ADDR)
+	desc.ed_tag.et_subtype = MIPI_SYST_CATALOG_ID64_P64;
+#else
+	desc.ed_tag.et_subtype = MIPI_SYST_CATALOG_ID64_P32;
+#endif
+	desc.ed_tag.et_severity = severity;
+
+	memcpy(argBuf+sizeof(id), args, args_sz);
+
+	*(mipi_syst_u64*)argBuf = MIPI_SYST_HTOLE64(id);
+
+	len = sizeof(id) + args_sz;
+
+	insert_optional_msg_components(svh, loc, (mipi_syst_u16)len, &desc, &prog_ptr);
+
+	*prog_ptr = scatter_ops[SCATTER_OP_PAYLD_VAR];
+	desc.ed_pld.data_var = (const mipi_syst_u8 *) argBuf;
+	prog_ptr->sso_length = (mipi_syst_u16)len;
+	++prog_ptr;
+	*prog_ptr = scatter_ops[SCATTER_OP_END];
+
+	ASSERT_CHECK(prog_ptr < &prog[MIPI_SYST_SCATTER_PROG_LEN]);
+
+	/* call IO routine to dump out the message */
+	MIPI_SYST_SCATTER_WRITE(svh, prog, &desc);
+}
 #endif // #if defined(MIPI_SYST_PCFG_ENABLE_CATID64_API)
 #if defined(MIPI_SYST_PCFG_ENABLE_CATID32_API)
 
@@ -1316,6 +1375,66 @@ MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
 	  *(mipi_syst_u32*)argBuf = MIPI_SYST_HTOLE32(id);
 		len += sizeof(id);
 	}
+
+	insert_optional_msg_components(svh, loc, (mipi_syst_u16)len, &desc, &prog_ptr);
+
+	*prog_ptr = scatter_ops[SCATTER_OP_PAYLD_VAR];
+	desc.ed_pld.data_var = (const mipi_syst_u8 *) argBuf;
+	prog_ptr->sso_length = (mipi_syst_u16)len;
+	++prog_ptr;
+	*prog_ptr = scatter_ops[SCATTER_OP_END];
+
+	ASSERT_CHECK(prog_ptr < &prog[MIPI_SYST_SCATTER_PROG_LEN]);
+
+	/* call IO routine to dump out the message */
+	MIPI_SYST_SCATTER_WRITE(svh, prog, &desc);
+}
+
+/**
+ * Write a printf catalog message with 32bit ID using a prepared argument list
+ *
+ * @param svh SyS-T handle
+ * @param loc Pointer to instrumentation location or null if no location
+ * @param severity severity level (0..7)
+ * @param id  catalog id
+ * @param args pointer to prepared argument list
+ * @param args_sz size of @p args (in bytes)
+ */
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+	mipi_syst_write_catalog32_args_copy(struct mipi_syst_handle* svh,
+	struct mipi_syst_msglocation* loc,
+	enum mipi_syst_severity severity,
+	mipi_syst_u32 id,
+	mipi_syst_u8 *args,
+	size_t args_sz)
+{
+	mipi_syst_u8 argBuf[MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE+sizeof(id)];
+	int len;
+	struct mipi_syst_msgdsc desc;
+	struct mipi_syst_scatter_prog prog[MIPI_SYST_SCATTER_PROG_LEN];
+	struct mipi_syst_scatter_prog *prog_ptr = prog;
+
+	if ((struct mipi_syst_handle*)0 == svh)
+		return;
+
+	if (args_sz >= MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE)
+		return;
+
+	/* assign tag */
+	desc.ed_tag = svh->systh_tag;
+	desc.ed_tag.et_type = MIPI_SYST_TYPE_CATALOG;
+#if defined(MIPI_SYST_PCFG_ENABLE_64BIT_ADDR)
+	desc.ed_tag.et_subtype = MIPI_SYST_CATALOG_ID32_P64;
+#else
+	desc.ed_tag.et_subtype = MIPI_SYST_CATALOG_ID32_P32;
+#endif
+	desc.ed_tag.et_severity = severity;
+
+	memcpy(argBuf+sizeof(id), args, args_sz);
+
+	*(mipi_syst_u32*)argBuf = MIPI_SYST_HTOLE32(id);
+
+	len = sizeof(id) + args_sz;
 
 	insert_optional_msg_components(svh, loc, (mipi_syst_u16)len, &desc, &prog_ptr);
 

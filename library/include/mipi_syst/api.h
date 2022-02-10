@@ -1807,6 +1807,26 @@ enum mipi_syst_catalog_parameter_types {
 			##__VA_ARGS__,\
 			_MIPI_SYST_CATARG_END)
 
+/**
+ * Send catalog message with a prepare argument list.
+ *
+ * This sends catalog messages and its vararg list where the vararg
+ * list is sent without any processing.
+ *
+ * @param svh mipi_syst_handle* SyS-T handle
+ * @param severity mipi_syst_severity severity level (0..7)
+ * @param id  mipi_syst_u64 catalog ID
+ * @param args pointer to the prepared argument list
+ * @param args_sz size of @p args (in bytes)
+ */
+#define MIPI_SYST_CATALOG64_ARGS_COPY(svh, severity, id, args, args_sz) \
+		mipi_syst_write_catalog64_args_copy((svh), \
+			MIPI_SYST_NOLOCATION, \
+			(severity),\
+			(id),\
+			(args),\
+			(args_sz))
+
  #if defined(MIPI_SYST_PCFG_ENABLE_LOCATION_RECORD)
 
  /**
@@ -2056,6 +2076,14 @@ mipi_syst_write_printf_catalog64(struct mipi_syst_handle* svh,
 		enum mipi_syst_severity severity,
 		mipi_syst_u64 id,
 		...);
+
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+mipi_syst_write_catalog64_args_copy(struct mipi_syst_handle* svh,
+		struct mipi_syst_msglocation* loc,
+		enum mipi_syst_severity severity,
+		mipi_syst_u64 id,
+		mipi_syst_u8 *args,
+		size_t args_sz);
 #endif /* #if defined(MIPI_SYST_PCFG_ENABLE_PRINTF_API) */
 
 /** @} */
@@ -2108,6 +2136,27 @@ mipi_syst_write_catalog64_message(struct mipi_syst_handle* svh,
 			(id),\
 			##__VA_ARGS__,\
 			_MIPI_SYST_CATARG_END)
+
+/**
+ * Send catalog message with a prepared argument list.
+ *
+ * This sends catalog messages and its vararg list where the vararg
+ * list is sent without any processing.
+ *
+ * @param svh mipi_syst_handle* SyS-T handle
+ * @param severity mipi_syst_severity severity level (0..7)
+ * @param id  mipi_syst_u32 catalog ID
+ * @param args pointer to the prepared argument list
+ * @param args_sz size of @p args (in bytes)
+ */
+#define MIPI_SYST_CATALOG32_ARGS_COPY(svh, severity, id, args, args_sz) \
+		mipi_syst_write_catalog32_args_copy((svh), \
+			MIPI_SYST_NOLOCATION, \
+			(severity),\
+			(id),\
+			(args),\
+			(args_sz))
+
 
  #if defined(MIPI_SYST_PCFG_ENABLE_LOCATION_RECORD)
 
@@ -2339,6 +2388,13 @@ mipi_syst_write_printf_catalog32(struct mipi_syst_handle* svh,
 		mipi_syst_u32 id,
 		...);
 
+MIPI_SYST_EXPORT void MIPI_SYST_CALLCONV
+mipi_syst_write_catalog32_args_copy(struct mipi_syst_handle* svh,
+		struct mipi_syst_msglocation* loc,
+		enum mipi_syst_severity severity,
+		mipi_syst_u32 id,
+		mipi_syst_u8 *args,
+		size_t args_sz);
 #endif /* defined(MIPI_SYST_PCFG_ENABLE_PRINTF_API) */
 
 /** @copydoc MIPI_SYST_CATALOG64_0 */
