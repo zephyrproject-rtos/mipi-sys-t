@@ -936,7 +936,16 @@ static int buildPrintfPayload(
 					break;
 				case 'c':
 					if (modifier == MOD_L) {
+#if WCHAR_MAX == 0xFFFFU
+					  /*
+					   * Every va_arg has minimal size of 4 bytes.
+					   * Some arch has wchar_t to be 16-bit (2 bytes),
+					   * so promote to integer or else compiler will complain.
+					   */
+					  COPY_ARG32(mipi_syst_u32, int);
+#else
 					  COPY_ARG32(mipi_syst_u32, wchar_t);
+#endif
 					} else {
 					  COPY_ARG32(mipi_syst_u32, int);
 					}
