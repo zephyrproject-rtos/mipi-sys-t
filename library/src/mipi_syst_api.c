@@ -651,7 +651,7 @@ enum ReturnCodes {
     val.d = (TOTYPE)va_arg(args, FROMTYPE);				\
     if (argp + sizeof(TOTYPE) < argEob) {				\
       val.v = MIPI_SYST_HTOLE64(val.v);					\
-      *((TOTYPE *)argp) = val.d;					\
+      memcpy(argp, &val.d, sizeof(TOTYPE));				\
       argp += sizeof(TOTYPE);						\
     } else {								\
       return FMT_PARSE_ARG_BUFFER_TOO_SMALL;				\
@@ -661,7 +661,8 @@ enum ReturnCodes {
 #define COPY_ARG32(TOTYPE, FROMTYPE)					\
   do {									\
     if (argp + sizeof(TOTYPE) < argEob) {				\
-      *((TOTYPE *)argp) = (TOTYPE)MIPI_SYST_HTOLE32(va_arg(args, FROMTYPE)); \
+      TOTYPE val = (TOTYPE)MIPI_SYST_HTOLE32(va_arg(args, FROMTYPE)); \
+      memcpy(argp, &val, sizeof(TOTYPE));				\
       argp += sizeof(TOTYPE);						\
     } else {								\
       return FMT_PARSE_ARG_BUFFER_TOO_SMALL;				\
@@ -671,7 +672,8 @@ enum ReturnCodes {
 #define COPY_ARG64(TOTYPE, FROMTYPE)					\
   do {									\
     if (argp + sizeof(TOTYPE) < argEob) {				\
-      *((TOTYPE *)argp) = (TOTYPE)MIPI_SYST_HTOLE64(va_arg(args, FROMTYPE));\
+      TOTYPE val = (TOTYPE)MIPI_SYST_HTOLE64(va_arg(args, FROMTYPE)); \
+      memcpy(argp, &val, sizeof(TOTYPE));				\
       argp += sizeof(TOTYPE);						\
     } else {								\
       return FMT_PARSE_ARG_BUFFER_TOO_SMALL;				\
