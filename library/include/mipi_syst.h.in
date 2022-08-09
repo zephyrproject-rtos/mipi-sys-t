@@ -523,14 +523,6 @@ typedef void (*mipi_syst_msg_write_t)(
 
 #define MIPI_SYST_PCFG_ENABLE_PRINTF_API
 
-/**
- * Maximum size of printf payload in bytes.
- * Adjust this value if larger strings shall be supported by the library.
- * The buffer space is located in stack memory when calling one of the printf
- * style APIs.
- */
-#define MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE 1024
-
 #endif /* #if MIPI_SYST_CONFORMANCE_LEVEL > 20 */
 
 /* @} */
@@ -598,6 +590,17 @@ typedef void (*mipi_syst_msg_write_t)(
 /** @} */
 
 #include "mipi_syst/platform.h"
+
+/**
+ * Maximum size of printf payload in bytes.
+ * Adjust this value if larger strings shall be supported by the library.
+ * The buffer space is located in stack memory when calling one of the printf
+ * style APIs.
+ */
+#if !defined(MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE)
+#define MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE 1024
+#endif
+
 #endif
 #ifdef __cplusplus
 extern "C" {
