@@ -34,4 +34,8 @@ if(CONFIG_MIPI_SYST_LIB)
     zephyr_library_link_libraries(mipi_syst_library)
 
     target_link_libraries(mipi_syst_library INTERFACE zephyr_interface)
+
+    if(CONFIG_MIPI_SYST_NO_WHCAR)
+      zephyr_library_compile_definitions(NO_WCHAR)
+    endif()
 endif()

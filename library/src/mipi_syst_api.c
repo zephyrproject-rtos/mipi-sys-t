@@ -604,7 +604,10 @@ mipi_syst_write_clock(struct mipi_syst_handle* svh,
 
 #include <stdarg.h>
 #include <stddef.h>
+
+#ifndef NO_WCHAR
 #include <wchar.h>
+#endif
 
 #if !defined(MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE)
 #define MIPI_SYST_PCFG_PRINTF_ARGBUF_SIZE 1024  /* Default 1Kb arg buffer */
@@ -1059,7 +1062,11 @@ static int buildCatalogPayload(
 			COPY_ARG32(mipi_syst_u32, int);
 			break;
 		case _MIPI_SYST_CATARG_LC:
+#if defined(_WCHAR_H) && (_WCHAR_H == 1)
 			COPY_ARG32(mipi_syst_u32, wint_t);
+#else
+			COPY_ARG32(mipi_syst_u32, unsigned int);
+#endif
 			break;
 
 		case _MIPI_SYST_CATARG_P:
