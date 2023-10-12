@@ -83,8 +83,8 @@ enum syst_scatter_ops {
 	SCATTER_OP_CATID_32,
 	SCATTER_OP_CATID_64,
 	SCATTER_OP_CATID_ARGS,
-	SCATTER_OP_CLOCK,
 #if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)
+	SCATTER_OP_CLOCK,
 	SCATTER_OP_TS,
 #endif
 #if defined(MIPI_SYST_PCFG_ENABLE_BUILD_API)
@@ -152,13 +152,13 @@ static const struct mipi_syst_scatter_prog scatter_ops[] = {
 	 MIPI_SYST_EVDSC_MEMBER_OFF(ed_pld.data_catid.param),
 	 0}
 	,
+#if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)
 	{		/* SCATTER_OP_CLOCK */
 	 MIPI_SYST_SCATTER_OP_64BIT,
 	 MIPI_SYST_EVDSC_MEMBER_OFF(ed_pld.data_clock),
 	 2}
 	,
-#if defined(MIPI_SYST_PCFG_ENABLE_TIMESTAMP)		/* SCATTER_OP_TS */
-	{
+	{		/* SCATTER_OP_TS */
 	 MIPI_SYST_SCATTER_OP_64BIT,
 	 MIPI_SYST_EVDSC_MEMBER_OFF(ed_ts),
 	 1}
