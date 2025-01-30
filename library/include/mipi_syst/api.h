@@ -266,7 +266,7 @@ CFG_ERROR_SYST_ALLOC_HANDLE_STATE_CALLED_WITHOUT_PCFG_ENABLE_HEAP_MEMORY
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 #define MIPI_SYST_ENABLE_HANDLE_LENGTH(h, v) \
-	((h) && ((h)->systh_tag.et_length = (v) ? 1 : 0))
+	((h) && ((((h)->systh_tag.et_length = (v)) != 0) ? 1 : 0))
 #else
 #define MIPI_SYST_ENABLE_HANDLE_LENGTH(h, v)
 #endif
@@ -455,7 +455,7 @@ CFG_ERROR_SET_HANDLE_GUID_UNIT_WITHOUT_MIPI_SYST_PCFG_ENABLE_ORIGIN_GUID
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 #define MIPI_SYST_ENABLE_HANDLE_TIMESTAMP(h, v) \
-	((h) && ((h)->systh_tag.et_timestamp = (v) ? 1 : 0))
+	((h) && ((((h)->systh_tag.et_timestamp = (v)) != 0) ? 1 : 0))
 
 /**
  * Get timestamp generation state from given SyS-T handle
