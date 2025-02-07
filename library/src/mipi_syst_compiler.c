@@ -73,6 +73,21 @@ MIPI_SYST_EXPORT void *MIPI_SYST_CALLCONV mipi_syst_return_addr()
 }
 #endif
 
+#elif defined(__IAR_SYSTEMS_ICC__) /* IAR Compiler section */
+
+#if defined(MIPI_SYST_PCFG_ENABLE_LOCATION_ADDRESS)
+/**
+ * Return the instruction pointer address of the instruction
+ * that follows this function. It is used to compute
+ * location information for SyS-T instrumentation calls.
+ * These are the calls that end with the _LOCADDR suffix.
+ */
+#include <intrinsics.h>
+MIPI_SYST_EXPORT void *MIPI_SYST_CALLCONV mipi_syst_return_addr()
+{
+	return __builtin_return_address(0);
+}
+#endif
 #else
 #error unknown compiler, copy and adapt one of the sections above
 #endif

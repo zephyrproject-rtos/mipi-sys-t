@@ -183,6 +183,67 @@ typedef unsigned long long mipi_syst_u64;
 	)
 #endif
 #endif
+#elif defined(__IAR_SYSTEMS_ICC__)	/* IAR Compiler section */
+
+/* basic integer types
+ */
+typedef char mipi_syst_s8;
+typedef short mipi_syst_s16;
+typedef int mipi_syst_s32;
+typedef long long mipi_syst_s64;
+
+typedef unsigned char mipi_syst_u8;
+typedef unsigned short mipi_syst_u16;
+typedef unsigned int mipi_syst_u32;
+typedef unsigned long long mipi_syst_u64;
+
+/* shared library related settings
+ */
+#define MIPI_SYST_EXPORT
+#define MIPI_SYST_CALLCONV
+
+#define MIPI_SYST_SHAREDLIB_CONSTRUCTOR __attribute__((constructor))
+#define MIPI_SYST_SHAREDLIB_DESTRUCTOR  __attribute__((destructor))
+
+#define MIPI_SYST_FUNCTION_NAME __PRETTY_FUNCTION__
+#define MIPI_SYST_LINE          __LINE__
+#define MIPI_SYST_FILE          __FILE__
+#define MIPI_SYST_CC_INLINE     inline
+
+/* Macros for byte swapping to little endian
+ */
+#if __LITTLE_ENDIAN__ == 0
+#define MIPI_SYST_BIG_ENDIAN
+
+#define MIPI_SYST_HTOLE16(v) \
+	((((mipi_syst_u16)(v))>>8)|((((mipi_syst_u16)(v))&0xFF)<<8))
+#define MIPI_SYST_HTOLE32(v) \
+	 ((mipi_syst_u32)__builtin_bswap32((mipi_syst_u32)(v)))
+#define MIPI_SYST_HTOLE64(v) \
+	 ((mipi_syst_u64)__builtin_bswap64((mipi_syst_u64)(v)))
+#else
+#define MIPI_SYST_HTOLE16(v) (v)
+#define MIPI_SYST_HTOLE32(v) (v)
+#define MIPI_SYST_HTOLE64(v) (v)
+#endif
+
+#if defined(__OPTIMIZE__)
+#define _MIPI_SYST_OPTIMIZER_ON
+#endif
+
+/* HW CRC32C support  ? */
+#if defined(MIPI_SYST_CRC_INTRINSIC_ON)
+#define MIPI_SYST_CRC_INTRINSIC
+#include <intrinsics.h>
+#define _MIPI_SYST_CPU_CRC8(crc, v) __CRC32B((crc), (v))
+#define _MIPI_SYST_CPU_CRC16(crc, v) __CRC32H((crc), (v))
+#define _MIPI_SYST_CPU_CRC32(crc, v) __CRC32W((crc), (v))
+#define _MIPI_SYST_CPU_CRC64(crc, v)  \
+	__CRC32W (\
+		__CRC32W((crc), (mipi_syst_u32)(v)), \
+		((mipi_syst_u32)((v)>> 32))\
+	)
+#endif
 #else
 #error unknown compiler, copy and adapt one of the sections above
 #endif
